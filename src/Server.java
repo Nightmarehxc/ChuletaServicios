@@ -36,7 +36,7 @@ public class Server
                 System.out.println("cliente conectado");
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                dataOutputStream.writeUTF("Conexion exitosa");
+
 
                 String mensaje = dataInputStream.readUTF();
                 System.out.println(">>> " + mensaje+ "\n" +
@@ -61,7 +61,7 @@ public class Server
                     dataOutputStream.writeUTF("Mensaje numero: "+ iMsg);
                 }
                 iMsg=+1;
-                dataOutputStream.writeUTF("Mensaje numero: "+ iMsg);
+//                dataOutputStream.writeUTF("Mensaje numero: "+ iMsg);
             }
         }
         catch (IOException e)
