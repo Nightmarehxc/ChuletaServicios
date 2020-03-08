@@ -3,19 +3,25 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Observable;
 
-public class Server
+public class Server extends Observable implements Runnable
 {
 
-    public static void main(String[] args)
+    String ip = "localhost";
+    int port = 5000;
+
+
+
+    private void createServer()
     {
-        createServer();
+        run();
     }
 
-    private static void createServer()
+    @Override
+    public void run()
     {
-        String ip = "localhost";
-        int port = 5000;
+
         DataInputStream dataInputStream;
         DataOutputStream dataOutputStream;
         ServerSocket server;
@@ -39,28 +45,31 @@ public class Server
 
 
                 String mensaje = dataInputStream.readUTF();
-                System.out.println(">>> " + mensaje+ "\n" +
-                        "Mensaje numero: "+iMsg);
+                System.out.println(">>> " + mensaje + "\n" +
+                        "Mensaje numero: " + iMsg);
+                dataInputStream.readUTF();
 
 
                 if (mensaje.contains("hola"))
                 {
                     dataOutputStream.writeUTF(">>>Hola buenas tardes\n" +
-                            ""+ menu.showMenu());
-
+                            "" + menu.showMenu());
+                    this.setChanged();
+                    this.notifyObservers(mensaje);
+                    this.clearChanged();
                 }
                 if (mensaje.contains("desconectar"))
                 {
                     socket.close();
                     System.out.println(" el cliente desconectado");
                 }
-                if(logicaServer.checkOnStringNumber(mensaje))
+                if (logicaServer.checkOnStringNumber(mensaje))
                 {
                     int a = logicaServer.retNumber(Integer.parseInt(mensaje));
-                    dataOutputStream.writeUTF("toma tu ticket: "+ a);
-                    dataOutputStream.writeUTF("Mensaje numero: "+ iMsg);
+                    dataOutputStream.writeUTF("toma tu ticket: " + a);
+                    dataOutputStream.writeUTF("Mensaje numero: " + iMsg);
                 }
-                iMsg=+1;
+                iMsg = +1;
 //                dataOutputStream.writeUTF("Mensaje numero: "+ iMsg);
             }
         }
@@ -70,3 +79,4 @@ public class Server
         }
     }
 }
+
